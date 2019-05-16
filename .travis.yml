@@ -1,0 +1,32 @@
+language: julia
+os:
+  - linux
+julia:
+  - 1.0
+notifications:
+  email: false
+git:
+  depth: 99999999
+cache:
+  timeout: 1000
+  directories:
+    - downloads
+env:
+  global:
+    - BINARYBUILDER_DOWNLOADS_CACHE=downloads
+    - BINARYBUILDER_AUTOMATIC_APPLE=true
+sudo: required
+before_script:
+  - julia -e 'using Pkg; pkg"add BinaryProvider"; pkg"add BinaryBuilder#master"; Pkg.build()'
+script:
+  - julia  --color=yes build_tarballs.jl
+deploy:
+  provider: releases
+  api_key:
+    secure: Cwe6iP9ZtVcvyjbnrxMyF8G1DuVduCX2X0EtpwCSMe9OJqwdBTtkkMCClrhXlK6xMQuM8hHVW/iqmBshiQH8DY7qp7RojB8faD4ZyUj/aSi4VO4ZdfErTI+US27RD/EHxJTIrfMX+gnsrWBDNWyobVfxsiEM+Ku0JunQEC2W/1riW/3uAxa+TT6F4j4wMnXMdcKDsSFCdhEetSUJps1QmxxB8uNTCyJ3nDXzNLrFjnuoG7NToFNTk+iIlAUsbnjA24a+vKl8EC/vBEECpAmrcDwEOcfETuSQScoxta0PyoT8tE/PlLrYoXgo4td+OWJgA190rOjmyemOBRS021p1BUgTJh3V/Q6lWXw3tqrpjSiRvIC3zUwg+2ojeiUV/rp1i22LCuUIqly+Q9mPH4c0UauPX3h/n6idwASx+ZJw7zHafHshmBRJSd1PcMqRa/W2aqfZr+8oC4AcB9R/e4r9Vb0H2zMlBUYlGrQLxhkX0NVsl6gyBJXbcGZvlXftIAqVy3IOOsB4NNzkWUiJOCdDgym+/e48g7D++RXwHqv3MMQetCQQDKg852aH3lUGa/UTDbysf9IhbHd3s7yNt28t05lfmrHu4YWMYfkIELipUyunLNqHd4USl6KzB5hgIuJ1pzSButr41baafVSzjS590rlIbDeT9hsYxUDaK8dVILw=
+  file_glob: true
+  file: products/*
+  skip_cleanup: true
+  on:
+    repo: benlorenz/lrslibBuilder
+    tags: true
